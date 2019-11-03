@@ -1,5 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+Map<PermissionGroup, PermissionStatus> permissionsMap;
+
+_checkPermission() async {
+  // 请求通讯录权限
+  permissionsMap =
+  await PermissionHandler().requestPermissions([PermissionGroup.contacts]);
+
+  // 检查通讯录权限
+  PermissionStatus permission =
+  await PermissionHandler().checkPermissionStatus(PermissionGroup.contacts);
+  if (permission != PermissionStatus.granted){
+    await PermissionHandler().openAppSettings();
+  }
+}
+
 
 void main() => runApp(new MyApp());
 
@@ -19,7 +36,7 @@ class MyApp extends StatelessWidget {
 
 /*
 *  联系人列表
-* */
+*/
 class ContactListWidget extends StatefulWidget {
   @override
   ContactListWidgetState createState() => new ContactListWidgetState();
@@ -30,14 +47,14 @@ class ContactListWidgetState extends State<ContactListWidget> {
 
   // 获取联系人并将信息放入_contactsList
   Future _getList() async {
+    // 检查权限
+    await _checkPermission();
     await ContactsService.getContacts().then((contacts) {
-      if (contacts.isNotEmpty) {
         for (var item in contacts) {
           setState(() {
             this._contactsList.add(item);
           });
         }
-      }
     });
   }
 
@@ -45,6 +62,7 @@ class ContactListWidgetState extends State<ContactListWidget> {
   @override
   void initState() {
     super.initState();
+
     _getList();
   }
 
@@ -53,7 +71,7 @@ class ContactListWidgetState extends State<ContactListWidget> {
     return Card(
         child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: Colors.amber,  // 设置头像默认背景色 todo 叠加第一个字 随机颜色
+              backgroundColor: Colors.amber, // 设置头像默认背景色 todo 叠加第一个字 随机颜色
               backgroundImage: this._contactsList[index].avatar.isEmpty
                   ? null
                   : MemoryImage(this._contactsList[index].avatar), // 判断是否有头像并返回
