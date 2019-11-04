@@ -72,12 +72,12 @@ class ContactListWidgetState extends State<ContactListWidget> {
         leading: CircleAvatar(
           backgroundColor: Color.fromARGB(
               255,
-              this._contactsList[index].displayName.codeUnitAt(0) % 100,
-              this._contactsList[index].displayName.codeUnitAt(1) % 50,
-              this._contactsList[index].displayName.codeUnitAt(0) % 50),
+              this._contactsList[index].displayName.codeUnitAt(this._contactsList[index].displayName.length-1) % 192,
+              this._contactsList[index].displayName.codeUnitAt(this._contactsList[index].displayName.length-1) % 151,
+              this._contactsList[index].displayName.codeUnitAt(this._contactsList[index].displayName.length-1) % 184),
           child: Text(
               this._contactsList[index].avatar.isEmpty
-                  ? this._contactsList[index].familyName
+                  ? this._contactsList[index].displayName[0]
                   : '',
               style: TextStyle(color: Colors.white)),
           // 设置头像默认背景色
