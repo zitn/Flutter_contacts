@@ -4,7 +4,7 @@ A new Flutter contact.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+正在开发中, 不稳定
 
 A few resources to get you started if this is your first Flutter project:
 
