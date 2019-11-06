@@ -24,26 +24,27 @@ class DetailPageState extends State<DetailPage> {
         child: ListView(
           padding: EdgeInsets.only(top: 10),
           children: <Widget>[
-            Card(
-              margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
-              elevation: 8,
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
-              child: Column(
-                children: _getPhonesCard(),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
-              elevation: 8,
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
-              child: Column(
-                children: _getEmailsCard(),
-              ),
-            )
+            _getCard(_getPhonesCard),
+            widget.contact.emails.isEmpty
+                ? Container() //如果为空, 返回一个空Container,返回null会报错
+                : _getCard(_getEmailsCard),
+            widget.contact.company==null
+                ? Container()
+                : _getCard(_getCompanyAndJobCard)
           ],
         ),
+      ),
+    );
+  }
+
+  Card _getCard(Function func) {
+    return Card(
+      margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
+      elevation: 8,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15))),
+      child: Column(
+        children: func(),
       ),
     );
   }
@@ -51,9 +52,6 @@ class DetailPageState extends State<DetailPage> {
   //生成电话卡片
   List<Widget> _getPhonesCard() {
     List<Widget> _list = new List<Widget>();
-    if (widget.contact.phones.isEmpty) {
-      return [];
-    }
     for (int i = 0; i < widget.contact.phones.length; i++) {
       _list.add(new ListTile(
         leading: Icon(Icons.call),
@@ -109,7 +107,20 @@ class DetailPageState extends State<DetailPage> {
   }
 
   //生成公司描述卡片
-  //生成职务卡片
+  List<Widget> _getCompanyAndJobCard() {
+    List<Widget> _list = new List<Widget>();
+    _list.add(ListTile(
+      leading: Icon(Icons.business),
+      title: Text(
+        widget.contact.company,
+        style: TextStyle(fontSize: 17),
+      ),
+      subtitle: widget.contact.jobTitle.isEmpty
+          ? null
+          : Text(widget.contact.jobTitle),
+    ));
+    return _list;
+  }
 
   @override
   void initState() {
