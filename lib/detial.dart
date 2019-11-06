@@ -36,8 +36,53 @@ class DetailPageState extends State<DetailPage> {
       body: Container(
         color: Colors.white,
         child: ListView(
-          padding: EdgeInsets.only(top: 10),
           children: <Widget>[
+            Container(
+              height: 250,
+              width: double.infinity,
+              child: widget.arguments["contact"].avatar.isEmpty
+                  ? Hero(
+                      tag: widget.arguments["contact"].displayName.hashCode,
+                      child: Container(
+                        color: Color.fromARGB(
+                            255,
+                            widget.arguments["contact"].displayName.codeUnitAt(
+                                    widget.arguments["contact"].displayName
+                                            .length -
+                                        1) *
+                                99 %
+                                190,
+                            widget.arguments["contact"].displayName.codeUnitAt(
+                                    widget.arguments["contact"].displayName
+                                            .length -
+                                        1) *
+                                99 %
+                                150,
+                            widget.arguments["contact"].displayName.codeUnitAt(
+                                    widget.arguments["contact"].displayName
+                                            .length -
+                                        1) *
+                                99 %
+                                180),
+                        child: Center(
+                          child: Text(
+                              widget.arguments["contact"].displayName[0],
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 25)),
+                        ),
+                      ))
+                  : Hero(
+                      tag: widget.arguments["contact"].avatar.hashCode,
+                      child: Container(
+                        child: Image.memory(
+                          widget.arguments["contact"].avatar,
+                          fit: BoxFit.fitWidth,
+                        ),
+                        color: Colors.white,
+                      ),
+                    ),
+            ),
+            SizedBox(height: 10),
             _getCard(_getPhonesCard),
             widget.arguments["contact"].emails.isEmpty
                 ? Container() //如果为空, 返回一个空Container,返回null会报错
