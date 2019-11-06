@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:my_contact/detial.dart';
@@ -12,7 +11,7 @@ _checkPermission() async {
 
   // 检查通讯录权限
   PermissionStatus permission =
-      await PermissionHandler().checkPermissionStatus(PermissionGroup.contacts);
+  await PermissionHandler().checkPermissionStatus(PermissionGroup.contacts);
   if (permission != PermissionStatus.granted) {
     await PermissionHandler().openAppSettings();
     exit(0);
@@ -24,8 +23,18 @@ void main() => runApp(new MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      debugShowCheckedModeBanner: false,
+    return HomePage();
+  }
+}
+
+class HomePage extends StatelessWidget {
+  final routes = {
+    "/": (context) =>HomePage(),
+    "/detial": (context, {arguments}) => DetailPage(arguments: arguments),
+  };
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       home: new Scaffold(
         appBar: new AppBar(
           elevation: 8,
@@ -45,6 +54,23 @@ class MyApp extends StatelessWidget {
         ),
         body: ContactListWidget(),
       ),
+      onGenerateRoute: (RouteSettings settings) {
+        final String name = settings.name;
+        final Function pageContentBuilder = routes[name];
+        if (pageContentBuilder != null) {
+          if (settings.arguments != null) {
+            final Route route = MaterialPageRoute(
+                builder: (context) =>
+                    pageContentBuilder(context, arguments: settings.arguments));
+            return route;
+          } else {
+            final Route route = MaterialPageRoute(
+                builder: (context) => pageContentBuilder(context));
+            return route;
+          }
+        }
+        return null;
+      },
     );
   }
 }
@@ -140,62 +166,60 @@ class ContactListWidgetState extends State<ContactListWidget> {
               ),
             ),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          DetailPage(this._contactsList[index])));
+              Navigator.pushNamed(context, "/detial", arguments: {
+                "contact": this._contactsList[index]
+              });
             },
             leading: this._contactsList[index].avatar.isEmpty
                 ? Hero(
-                    tag: this._contactsList[index].displayName.hashCode,
-                    child: CircleAvatar(
-                      radius: 23,
-                      backgroundColor: Color.fromARGB(
-                          255,
-                          this._contactsList[index].displayName.codeUnitAt(
-                                  this._contactsList[index].displayName.length -
-                                      1) *
-                              99 %
-                              190,
-                          this._contactsList[index].displayName.codeUnitAt(
-                                  this._contactsList[index].displayName.length -
-                                      1) *
-                              99 %
-                              150,
-                          this._contactsList[index].displayName.codeUnitAt(
-                                  this._contactsList[index].displayName.length -
-                                      1) *
-                              99 %
-                              180),
-                      child: Text(this._contactsList[index].displayName[0],
-                          style: TextStyle(color: Colors.white, fontSize: 25)),
-                    ))
+                tag: this._contactsList[index].displayName.hashCode,
+                child: CircleAvatar(
+                  radius: 23,
+                  backgroundColor: Color.fromARGB(
+                      255,
+                      this._contactsList[index].displayName.codeUnitAt(
+                          this._contactsList[index].displayName.length -
+                              1) *
+                          99 %
+                          190,
+                      this._contactsList[index].displayName.codeUnitAt(
+                          this._contactsList[index].displayName.length -
+                              1) *
+                          99 %
+                          150,
+                      this._contactsList[index].displayName.codeUnitAt(
+                          this._contactsList[index].displayName.length -
+                              1) *
+                          99 %
+                          180),
+                  child: Text(this._contactsList[index].displayName[0],
+                      style: TextStyle(color: Colors.white, fontSize: 25)),
+                ))
                 : Hero(
-                    tag: this._contactsList[index].avatar.hashCode,
-                    child: CircleAvatar(
-                      radius: 23,
-                      backgroundImage:
-                          MemoryImage(this._contactsList[index].avatar),
-                      backgroundColor: Color.fromARGB(
-                          255,
-                          this._contactsList[index].displayName.codeUnitAt(
-                                  this._contactsList[index].displayName.length -
-                                      1) *
-                              99 %
-                              190,
-                          this._contactsList[index].displayName.codeUnitAt(
-                                  this._contactsList[index].displayName.length -
-                                      1) *
-                              99 %
-                              150,
-                          this._contactsList[index].displayName.codeUnitAt(
-                                  this._contactsList[index].displayName.length -
-                                      1) *
-                              99 %
-                              180),
-                    ),
-                  ),
+              tag: this._contactsList[index].avatar.hashCode,
+              child: CircleAvatar(
+                radius: 23,
+                backgroundImage:
+                MemoryImage(this._contactsList[index].avatar),
+                backgroundColor: Color.fromARGB(
+                    255,
+                    this._contactsList[index].displayName.codeUnitAt(
+                        this._contactsList[index].displayName.length -
+                            1) *
+                        99 %
+                        190,
+                    this._contactsList[index].displayName.codeUnitAt(
+                        this._contactsList[index].displayName.length -
+                            1) *
+                        99 %
+                        150,
+                    this._contactsList[index].displayName.codeUnitAt(
+                        this._contactsList[index].displayName.length -
+                            1) *
+                        99 %
+                        180),
+              ),
+            ),
           ),
         )
       ],

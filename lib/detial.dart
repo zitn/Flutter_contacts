@@ -3,9 +3,10 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatefulWidget {
-  final Contact contact;
+//  final Contact contact;
+  final arguments;
 
-  DetailPage(this.contact);
+  DetailPage({this.arguments});
 
   @override
   DetailPageState createState() => new DetailPageState();
@@ -17,7 +18,20 @@ class DetailPageState extends State<DetailPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 8,
-        title: Text(widget.contact.displayName),
+        title: Text(widget.arguments["contact"].displayName),
+        actions: <Widget>[
+          new IconButton(
+              // action button
+              icon: new Icon(Icons.delete_outline),
+              onPressed: () {
+                showAlertDialog(context);
+              }),
+          new IconButton(
+            // action button
+            icon: new Icon(Icons.edit),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: Container(
         color: Colors.white,
@@ -25,15 +39,51 @@ class DetailPageState extends State<DetailPage> {
           padding: EdgeInsets.only(top: 10),
           children: <Widget>[
             _getCard(_getPhonesCard),
-            widget.contact.emails.isEmpty
+            widget.arguments["contact"].emails.isEmpty
                 ? Container() //如果为空, 返回一个空Container,返回null会报错
                 : _getCard(_getEmailsCard),
-            widget.contact.company==null
+            widget.arguments["contact"].company == null
                 ? Container()
                 : _getCard(_getCompanyAndJobCard)
           ],
         ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("我再想想"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("确认"),
+      onPressed: () {
+        ContactsService.deleteContact(widget.arguments["contact"]);
+        Navigator.pushNamedAndRemoveUntil(
+            context, "/", (route) => route == null);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+//      title: Text("AlertDialog"),
+      content: Text("要删除此联系人吗?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 
@@ -52,26 +102,28 @@ class DetailPageState extends State<DetailPage> {
   //生成电话卡片
   List<Widget> _getPhonesCard() {
     List<Widget> _list = new List<Widget>();
-    for (int i = 0; i < widget.contact.phones.length; i++) {
+    for (int i = 0; i < widget.arguments["contact"].phones.length; i++) {
       _list.add(new ListTile(
         leading: Icon(Icons.call),
         title: Text(
-          widget.contact.phones.elementAt(i).value,
+          widget.arguments["contact"].phones.elementAt(i).value,
           style: TextStyle(fontSize: 17),
         ),
-        subtitle: Text(widget.contact.phones.elementAt(i).label),
+        subtitle: Text(widget.arguments["contact"].phones.elementAt(i).label),
         onTap: () {
-          launch("tel:${widget.contact.phones.elementAt(i).value}");
+          launch(
+              "tel:${widget.arguments["contact"].phones.elementAt(i).value}");
         },
         dense: true,
         trailing: IconButton(
           icon: Icon(Icons.message),
           onPressed: () {
-            launch("sms:${widget.contact.phones.elementAt(i).value}");
+            launch(
+                "sms:${widget.arguments["contact"].phones.elementAt(i).value}");
           },
         ),
       ));
-      if (i < widget.contact.phones.length - 1) {
+      if (i < widget.arguments["contact"].phones.length - 1) {
         _list.add(Divider());
       }
       setState(() {});
@@ -82,23 +134,24 @@ class DetailPageState extends State<DetailPage> {
   // 生成邮件卡片
   List<Widget> _getEmailsCard() {
     List<Widget> _list = new List<Widget>();
-    if (widget.contact.emails.isEmpty) {
+    if (widget.arguments["contact"].emails.isEmpty) {
       return [];
     }
-    for (int i = 0; i < widget.contact.emails.length; i++) {
+    for (int i = 0; i < widget.arguments["contact"].emails.length; i++) {
       _list.add(new ListTile(
         leading: Icon(Icons.mail),
         title: Text(
-          widget.contact.emails.elementAt(i).value,
+          widget.arguments["contact"].emails.elementAt(i).value,
           style: TextStyle(fontSize: 17),
         ),
-        subtitle: Text(widget.contact.emails.elementAt(i).label),
+        subtitle: Text(widget.arguments["contact"].emails.elementAt(i).label),
         dense: true,
         onTap: () {
-          launch("mailto:${widget.contact.emails.elementAt(i).value}");
+          launch(
+              "mailto:${widget.arguments["contact"].emails.elementAt(i).value}");
         },
       ));
-      if (i < widget.contact.emails.length - 1) {
+      if (i < widget.arguments["contact"].emails.length - 1) {
         _list.add(Divider());
       }
       setState(() {});
@@ -112,12 +165,12 @@ class DetailPageState extends State<DetailPage> {
     _list.add(ListTile(
       leading: Icon(Icons.business),
       title: Text(
-        widget.contact.company,
+        widget.arguments["contact"].company,
         style: TextStyle(fontSize: 17),
       ),
-      subtitle: widget.contact.jobTitle.isEmpty
+      subtitle: widget.arguments["contact"].jobTitle.isEmpty
           ? null
-          : Text(widget.contact.jobTitle),
+          : Text(widget.arguments["contact"].jobTitle),
     ));
     return _list;
   }
