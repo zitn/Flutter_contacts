@@ -12,6 +12,43 @@ class DetailPage extends StatefulWidget {
 }
 
 class DetailPageState extends State<DetailPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 8,
+        title: Text(widget.contact.displayName),
+      ),
+      body: Container(
+        color: Colors.white,
+        child: ListView(
+          padding: EdgeInsets.only(top: 10),
+          children: <Widget>[
+            Card(
+              margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
+              elevation: 8,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
+              child: Column(
+                children: _getPhonesCard(),
+              ),
+            ),
+            Card(
+              margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
+              elevation: 8,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
+              child: Column(
+                children: _getEmailsCard(),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  //生成电话卡片
   List<Widget> _getPhonesCard() {
     List<Widget> _list = new List<Widget>();
     if (widget.contact.phones.isEmpty) {
@@ -44,6 +81,7 @@ class DetailPageState extends State<DetailPage> {
     return _list;
   }
 
+  // 生成邮件卡片
   List<Widget> _getEmailsCard() {
     List<Widget> _list = new List<Widget>();
     if (widget.contact.emails.isEmpty) {
@@ -70,41 +108,8 @@ class DetailPageState extends State<DetailPage> {
     return _list;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 8,
-        title: Text(widget.contact.displayName),
-      ),
-      body: Container(
-        color: Colors.white,
-        padding: EdgeInsets.only(top: 10),
-        child: ListView(
-          children: <Widget>[
-            Card(
-              margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
-              elevation: 8,
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
-              child: Column(
-                children: _getPhonesCard(),
-              ),
-            ),
-            Card(
-              margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
-              elevation: 8,
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
-              child: Column(
-                children: _getEmailsCard(),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  //生成公司描述卡片
+  //生成职务卡片
 
   @override
   void initState() {

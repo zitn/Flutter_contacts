@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:my_contact/detial.dart';
@@ -13,6 +15,7 @@ _checkPermission() async {
       await PermissionHandler().checkPermissionStatus(PermissionGroup.contacts);
   if (permission != PermissionStatus.granted) {
     await PermissionHandler().openAppSettings();
+    exit(0);
   }
 }
 
@@ -93,7 +96,6 @@ class ContactListWidgetState extends State<ContactListWidget> {
   @override
   void initState() {
     super.initState();
-
     _getList();
   }
 
@@ -211,13 +213,12 @@ class ContactListWidgetState extends State<ContactListWidget> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-        onRefresh: _refresh,
-        child: Padding(
-          padding: EdgeInsets.only(top: 5),
-          child: ListView.builder(
-            itemBuilder: _itemBuilder,
-            itemCount: this._contactsList.length,
-          ),
-        ));
+      onRefresh: _refresh,
+      child: ListView.builder(
+        padding: EdgeInsets.only(top: 5),
+        itemBuilder: _itemBuilder,
+        itemCount: this._contactsList.length,
+      ),
+    );
   }
 }
