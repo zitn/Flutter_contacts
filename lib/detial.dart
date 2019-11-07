@@ -224,24 +224,4 @@ class DetailPageState extends State<DetailPage> {
     ));
     return _list;
   }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(DetailPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
 }
