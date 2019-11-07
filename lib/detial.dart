@@ -3,7 +3,6 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatefulWidget {
-//  final Contact contact;
   final arguments;
 
   DetailPage({this.arguments});

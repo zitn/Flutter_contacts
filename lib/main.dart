@@ -205,7 +205,8 @@ class ContactListWidgetState extends State<ContactListWidget> {
                       child: Material(
                         color: Colors.transparent,
                         child: Text(this._contactsList[index].displayName[0],
-                            style: TextStyle(color: Colors.white, fontSize: 25)),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 25)),
                       ),
                     ))
                 : Hero(
