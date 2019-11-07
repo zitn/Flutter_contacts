@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
   final routes = {
     "/": (context) => HomePage(),
     "/detial": (context, {arguments}) => DetailPage(arguments: arguments),
-    "/create": (context) => CreateNewContact(),
+    "/create": (context, {arguments}) => CreateNewContact(arguments: arguments),
   };
 
   @override

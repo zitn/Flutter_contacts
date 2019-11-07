@@ -2,13 +2,16 @@ import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 
 class CreateNewContact extends StatefulWidget {
+  final arguments;
+
+  CreateNewContact({this.arguments});
+
   @override
   CreateNewContactState createState() => CreateNewContactState();
 }
 
 class CreateNewContactState extends State<CreateNewContact> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   String _name;
   Item _phoneNumber;
   String _company;
@@ -24,15 +27,27 @@ class CreateNewContactState extends State<CreateNewContact> {
         company: this._company.isEmpty ? null : this._company,
         jobTitle: this._jobTitle.isEmpty ? null : this._jobTitle,
       ));
+      Navigator.pushNamedAndRemoveUntil(context, "/", (route) => route == null);
     }
   }
 
+  final FocusNode _nameFocus = FocusNode();
+  final FocusNode _phoneNumberFocus = FocusNode();
+  final FocusNode _cpmpanyFocus = FocusNode();
+  final FocusNode _jonTitleFocus = FocusNode();
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    String _title = "新建联系人";
+
+    if (widget.arguments == null) {
+      _title = "新建联系人";
+    } else {
+      _title = "修改联系人";
+    }
     return Scaffold(
       appBar: AppBar(
-        title: Text('新增联系人'),
+        title: Text(_title),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _forSubmitted,
@@ -45,6 +60,11 @@ class CreateNewContactState extends State<CreateNewContact> {
           child: Column(
             children: <Widget>[
               TextFormField(
+                focusNode: this._nameFocus,
+                onFieldSubmitted: (term){
+                  _fieldFocusChange(context, this._nameFocus, this._phoneNumberFocus);
+                },
+                textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
                   labelText: '姓名',
                 ),
@@ -55,18 +75,32 @@ class CreateNewContactState extends State<CreateNewContact> {
                   return str.isEmpty ? "姓名不能为空" : null;
                 },
               ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: '电话',
-                ),
-                validator: (val) {
-                  return val.isEmpty ? "电话不能为空" : null;
-                },
-                onSaved: (val) {
-                  this._phoneNumber = Item(value: val);
-                },
+              Column(
+                children: [
+                  TextFormField(
+                    focusNode: this._phoneNumberFocus,
+                    onFieldSubmitted: (term){
+                      _fieldFocusChange(context, this._phoneNumberFocus, this._cpmpanyFocus);
+                    },
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      labelText: '电话',
+                    ),
+                    validator: (val) {
+                      return val.isEmpty ? "电话不能为空" : null;
+                    },
+                    onSaved: (val) {
+                      this._phoneNumber = Item(value: val);
+                    },
+                  ),
+                ],
               ),
               TextFormField(
+                focusNode: this._cpmpanyFocus,
+                onFieldSubmitted: (term){
+                  _fieldFocusChange(context, this._cpmpanyFocus, this._jonTitleFocus);
+                },
+                textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
                   labelText: '公司',
                 ),
@@ -75,6 +109,11 @@ class CreateNewContactState extends State<CreateNewContact> {
                 },
               ),
               TextFormField(
+                focusNode: this._jonTitleFocus,
+                onFieldSubmitted: (term){
+                  _forSubmitted();
+                },
+                textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
                   labelText: '职务',
                 ),
@@ -89,114 +128,29 @@ class CreateNewContactState extends State<CreateNewContact> {
     );
   }
 
-//
-//  String _name, _phone, _email;
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return Scaffold(
-//        appBar: AppBar(
-//          title: Text('添加新联系人'),
-//        ),
-//        floatingActionButton: FloatingActionButton(
-//          onPressed: () {},
-//          child: Icon(Icons.done),
-//        ),
-//        body: Container(
-//          padding: EdgeInsets.only(top: 10),
-//          child: Form(
-//            child: Column(
-//              children: <Widget>[
-//                Card(
-//                  margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
-//                  elevation: 8,
-//                  shape: const RoundedRectangleBorder(
-//                      borderRadius: BorderRadius.all(Radius.circular(15))),
-//                  child: TextFormField(
-//                    autofocus: true,
-//                    onChanged: (str) {
-//                      this._name = str;
-//                    },
-//                    decoration: InputDecoration(
-//                      icon: Container(
-//                        width: 40,
-//                        alignment: Alignment.centerRight,
-//                        child: Icon(Icons.person),
-//                      ),
-//                      border: InputBorder.none,
-//                      hintText: "姓名",
-//                      hintStyle: TextStyle(fontSize: 20),
-//                    ),
-//                    style: TextStyle(fontSize: 20),
-//                  ),
-//                ),
-//                Card(
-//                  margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
-//                  elevation: 8,
-//                  shape: const RoundedRectangleBorder(
-//                      borderRadius: BorderRadius.all(Radius.circular(15))),
-//                  child: TextFormField(
-//                    autofocus: true,
-//                    decoration: InputDecoration(
-//                      icon: Container(
-//                        width: 40,
-//                        alignment: Alignment.centerRight,
-//                        child: Icon(Icons.call),
-//                      ),
-//                      border: InputBorder.none,
-//                      hintText: "电话",
-//                      hintStyle: TextStyle(fontSize: 20),
-//                    ),
-//                    style: TextStyle(fontSize: 20),
-//                  ),
-//                ),
-//                Card(
-//                  margin: EdgeInsets.fromLTRB(15, 5, 15, 5),
-//                  elevation: 8,
-//                  shape: const RoundedRectangleBorder(
-//                      borderRadius: BorderRadius.all(Radius.circular(15))),
-//                  child: TextFormField(
-//                    autofocus: true,
-//                    decoration: InputDecoration(
-//                      icon: Container(
-//                        width: 40,
-//                        alignment: Alignment.centerRight,
-//                        child: Icon(Icons.email),
-//                      ),
-//                      border: InputBorder.none,
-//                      hintText: "邮件",
-//                      hintStyle: TextStyle(fontSize: 20),
-//                    ),
-//                    style: TextStyle(fontSize: 20),
-//                  ),
-//                ),
-//              ],
-//            ),
-//          ),
-//        ));
-//  }
+
+  _fieldFocusChange(BuildContext context, FocusNode currentFocus,FocusNode nextFocus) {
+    currentFocus.unfocus();
+    FocusScope.of(context).requestFocus(nextFocus);
+  }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
   @override
   void didUpdateWidget(CreateNewContact oldWidget) {
-    // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 }

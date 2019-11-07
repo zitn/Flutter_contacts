@@ -28,7 +28,10 @@ class DetailPageState extends State<DetailPage> {
           new IconButton(
             // action button
             icon: new Icon(Icons.edit),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, "/create",
+                  arguments: {"contact": widget.arguments["contact"]});
+            }, //todo
           ),
         ],
       ),
@@ -66,8 +69,10 @@ class DetailPageState extends State<DetailPage> {
                         child: Center(
                           child: Material(
                             color: Colors.transparent,
-                            child: Text(widget.arguments["contact"].displayName[0],
-                                style: TextStyle(color: Colors.white, fontSize: 25)),
+                            child: Text(
+                                widget.arguments["contact"].displayName[0],
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 25)),
                           ),
                         ),
                       ))
@@ -222,25 +227,21 @@ class DetailPageState extends State<DetailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
   @override
   void didUpdateWidget(DetailPage oldWidget) {
-    // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 }
