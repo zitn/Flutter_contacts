@@ -202,8 +202,11 @@ class ContactListWidgetState extends State<ContactListWidget> {
                                       1) *
                               99 %
                               180),
-                      child: Text(this._contactsList[index].displayName[0],
-                          style: TextStyle(color: Colors.white, fontSize: 25)),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Text(this._contactsList[index].displayName[0],
+                            style: TextStyle(color: Colors.white, fontSize: 25)),
+                      ),
                     ))
                 : Hero(
                     tag: this._contactsList[index].avatar.hashCode,
@@ -211,23 +214,7 @@ class ContactListWidgetState extends State<ContactListWidget> {
                       radius: 23,
                       backgroundImage:
                           MemoryImage(this._contactsList[index].avatar),
-                      backgroundColor: Color.fromARGB(
-                          255,
-                          this._contactsList[index].displayName.codeUnitAt(
-                                  this._contactsList[index].displayName.length -
-                                      1) *
-                              99 %
-                              190,
-                          this._contactsList[index].displayName.codeUnitAt(
-                                  this._contactsList[index].displayName.length -
-                                      1) *
-                              99 %
-                              150,
-                          this._contactsList[index].displayName.codeUnitAt(
-                                  this._contactsList[index].displayName.length -
-                                      1) *
-                              99 %
-                              180),
+                      backgroundColor: Colors.white,
                     ),
                   ),
           ),

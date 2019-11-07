@@ -65,10 +65,11 @@ class DetailPageState extends State<DetailPage> {
                                 99 %
                                 180),
                         child: Center(
-                          child: Text(
-                              widget.arguments["contact"].displayName[0],
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 25)),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: Text(widget.arguments["contact"].displayName[0],
+                                style: TextStyle(color: Colors.white, fontSize: 25)),
+                          ),
                         ),
                       ))
                   : Hero(
